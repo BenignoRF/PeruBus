@@ -24,6 +24,7 @@ import com.ruta.perubus.R
 import com.ruta.perubus.api.Api
 import com.ruta.perubus.api.RetrofitClient
 import com.ruta.perubus.databinding.ActivitySelectbusBinding
+import com.ruta.perubus.helper.Constants
 import com.ruta.perubus.models.*
 import com.ruta.perubus.ui.MapsActivity
 import com.ruta.perubus.ui.agencias.AgenciasActivity
@@ -281,14 +282,23 @@ class SelectBusActivityNew : AppCompatActivity(), IBusItemListener {
 
     override fun onBusItemClickListener(currentItem: Bus) {
 
-        viewModel.getTarifa(
-            currentItem,
-            (binding.SpinnerDestino.selectedItem as Destino).codRumbo,
-            (binding.SpinnerOrigen.selectedItem as Origen).codigoOrigen,
-            (binding.SpinnerDestino.selectedItem as Destino).codigoDestino
-        )
 
-        this.currentItem = currentItem
+        if (currentItem.latitude == Constants.NO_DATA
+            || currentItem.longitude == Constants.NO_DATA
+            || currentItem.longitude.isEmpty()
+            || currentItem.latitude.isEmpty()
+        ) {
+            Toast.makeText(this, Constants.NO_POSITION_MESSAGE, Toast.LENGTH_LONG).show()
+        } else {
+            viewModel.getTarifa(
+                currentItem,
+                (binding.SpinnerDestino.selectedItem as Destino).codRumbo,
+                (binding.SpinnerOrigen.selectedItem as Origen).codigoOrigen,
+                (binding.SpinnerDestino.selectedItem as Destino).codigoDestino
+            )
+
+            this.currentItem = currentItem
+        }
 
 
     }
